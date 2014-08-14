@@ -17,6 +17,8 @@ public class DVFSSimulationTests {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        SimulatedCPU cpu = new SimulatedCPU();
+        cpu.start();
     }
     
 }

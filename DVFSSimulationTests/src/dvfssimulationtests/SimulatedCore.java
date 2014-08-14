@@ -24,22 +24,20 @@ public class SimulatedCore extends Thread{
         jobSize = js;
     }
     
-    public void executeJob() throws EndOfJobException{
-        run();
-        throw new EndOfJobException(cIdx);
-    }
-    
     @Override
     public void run(){
-        System.out.println("Core " + cIdx + " iniciando tarefa...");
+        System.out.println("Core " + cIdx + " iniciando tarefa de tamanho " + jobSize + "...");
         for(int doneJob = 0; doneJob <= jobSize ; doneJob++){
+            int freq = SimulatedCPU.freqs[cIdx];
             try {
-                Thread.sleep(SimulatedCPU.MAX_FREQ - SimulatedCPU.freqs[cIdx]);
+                Thread.sleep(SimulatedCPU.MAX_FREQ - freq);
             } catch (InterruptedException ex) {
                 System.exit(1);
             }
             int percent =  (doneJob*100)/jobSize;
-            System.out.println("Core " + cIdx + " concluiu " + percent +"% da tarefa.");
+            System.out.println("Core " + cIdx + "(" + freq + ") concluiu " + percent +"% da tarefa["
+                    + doneJob +"/"+ jobSize +"].");
         }
+        SimulatedCPU.endOfJobSignal(cIdx);
     }
 }
