@@ -15,8 +15,8 @@ import java.util.logging.Logger;
  */
 public class SimulatedCore extends Thread{
     
-    private int cIdx;
-    private int jobSize;
+    private final int cIdx;
+    private final int jobSize;
     private double consumedEnergy;
     
     public SimulatedCore(int n, int js){
