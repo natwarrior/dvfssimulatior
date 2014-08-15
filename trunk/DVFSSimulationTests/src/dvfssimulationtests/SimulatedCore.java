@@ -6,9 +6,6 @@
 
 package dvfssimulationtests;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author carlosmagno
@@ -18,17 +15,19 @@ public class SimulatedCore extends Thread{
     private final int cIdx;
     private final int jobSize;
     private double consumedEnergy;
+    private SimulatedCPU parent;
     
-    public SimulatedCore(int n, int js){
+    public SimulatedCore(int n, int js, SimulatedCPU parent){
         cIdx = n;
         jobSize = js;
+        this.parent = parent;
     }
     
     @Override
     public void run(){
         System.out.println("Core " + cIdx + " iniciando tarefa de tamanho " + jobSize + "...");
         for(int doneJob = 0; doneJob <= jobSize ; doneJob++){
-            int freq = SimulatedCPU.freqs[cIdx];
+            int freq = parent.getFreq(cIdx);
             try {
                 Thread.sleep(SimulatedCPU.MAX_FREQ - freq);
             } catch (InterruptedException ex) {
@@ -38,6 +37,6 @@ public class SimulatedCore extends Thread{
             System.out.println("Core " + cIdx + "(" + freq + ") concluiu " + percent +"% da tarefa["
                     + doneJob +"/"+ jobSize +"].");
         }
-        SimulatedCPU.endOfJobSignal(cIdx);
+        parent.endOfJobSignal(cIdx);
     }
 }
