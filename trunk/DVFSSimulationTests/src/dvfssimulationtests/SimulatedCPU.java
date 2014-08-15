@@ -19,31 +19,32 @@ public class SimulatedCPU {
     private static final double NON_STRATEGY_FREQ_PERCENT = 0.8;
     private static final boolean[] exec = new boolean[N_CORES];
     private final SimulatedCore[] cores = new SimulatedCore[N_CORES];
+    private final int[] jobs = new int[N_CORES];
     private final static EnergyCalculator[] energys = new EnergyCalculator[N_CORES];
     private final static int MIN_JOB_SIZE = 1;
     private final static int MAX_JOB_SIZE = 15;
     private final static int MIN_FREQ = 1000;
-    private final static boolean STRATEGY = true;
+    public static boolean STRATEGY = false;
 
     public final static int MAX_FREQ = 5000;
     public static int[] freqs = new int[N_CORES];
 
     public SimulatedCPU() {
         for (int i = 0; i < N_CORES; i++) {
-            freqs[i] = STRATEGY ? MIN_FREQ : (int)(MAX_FREQ*NON_STRATEGY_FREQ_PERCENT);
-            energys[i] = new EnergyCalculator();
+            jobs[i] = (int) (MAX_JOB_SIZE * Math.random());
         }
     }
 
     public void start() {
-        int jobSize;
+        
         for (int i = 0; i < N_CORES; i++) {
+            freqs[i] = STRATEGY ? MIN_FREQ : (int)(MAX_FREQ*NON_STRATEGY_FREQ_PERCENT);
+            energys[i] = new EnergyCalculator();
             exec[i] = true;
-            jobSize = (int) (MAX_JOB_SIZE * Math.random());
-            cores[i]
-                    = new SimulatedCore(i, (int) (jobSize < MIN_JOB_SIZE ? MIN_JOB_SIZE : jobSize));
+            cores[i] = new SimulatedCore(i, (int) (jobs[i] < MIN_JOB_SIZE ? MIN_JOB_SIZE : jobs[i]));
             energys[i].addPair(new Date(), freqs[i]);
             cores[i].start();
+            cores[i].join();
         }
     }
 

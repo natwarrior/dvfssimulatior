@@ -18,6 +18,11 @@ public class DVFSSimulationTests {
     public static void main(String[] args) {
         // TODO code application logic here
         SimulatedCPU cpu = new SimulatedCPU();
+        SimulatedCPU.STRATEGY = true;
+        cpu.start();
+        
+        System.err.println("minino");
+        SimulatedCPU.STRATEGY = false;
         cpu.start();
     }
     
