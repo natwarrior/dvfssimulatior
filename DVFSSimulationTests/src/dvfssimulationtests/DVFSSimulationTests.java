@@ -6,6 +6,9 @@
 
 package dvfssimulationtests;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author carlosmagno
@@ -17,13 +20,16 @@ public class DVFSSimulationTests {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        SimulatedCPU cpu = new SimulatedCPU();
-        SimulatedCPU.STRATEGY = true;
-        cpu.start();
+        int[] jobs = new int[SimulatedCPU.N_CORES];
+        for(int i = 0 ; i < SimulatedCPU.N_CORES ; i++){
+            jobs[i] = (int)(SimulatedCPU.MAX_JOB_SIZE*Math.random());
+        } 
         
-        System.err.println("minino");
-        SimulatedCPU.STRATEGY = false;
-        cpu.start();
+        SimulatedCPU cpuSrategy = new SimulatedCPU(jobs, true);
+        SimulatedCPU cpuNonStrategy = new SimulatedCPU(jobs, false);
+        
+        cpuSrategy.start();
+        cpuNonStrategy.start();
     }
     
 }
