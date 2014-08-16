@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dvfssimulationtests;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +19,6 @@ public class SimulatedCPU {
     // PRIVATE & STATIC
     private static final double INCREASE_FREQ_PERCENT = 0.75;
     private static final double NON_STRATEGY_FREQ_PERCENT = 0.8;
-    private final static int MIN_FREQ = 1000;
     
     // PRIVATE
     private boolean strategy;
@@ -38,7 +30,15 @@ public class SimulatedCPU {
     //FINAL PRIVATE
     private final SimulatedCore[] cores = new SimulatedCore[N_CORES];
     private final EnergyCalculator[] energys = new EnergyCalculator[N_CORES];
-
+    private final static int MIN_FREQ = 1000;
+    
+    /**
+    * Construtor que recebe as tarefas e uma flag para verificar se a simulacao 
+    * será com estrategia. Caso seja com estrategia, cada CPU comecará com a fre-
+    * quencia minima, senao iniciará com a frenquencia maxima multiplicado pela
+    * porcentagem para a CPU sem estratégia.
+    */
+    
     public SimulatedCPU(int jobs[], boolean strategy) {
         this.jobs = jobs;
         this.strategy = strategy;
@@ -47,6 +47,14 @@ public class SimulatedCPU {
             energys[i] = new EnergyCalculator();
         }
     }
+    
+    /**
+    * Esse método inicia cada thread, no entanto antes da iniciação ele verifica 
+    * se o tamanho da tarefa é menor do que o tamanho minimo aceito da tarefa 
+    * caso seja menor, ele ira trocar pela valor da constante MIN_JOB_SIZE caso 
+    * não seja, ele irá continuar com o valor atual. O Metodo tambem coloca true 
+    * em cada flag que esta simbolizando se o core esta exercutando uma   
+    */
     
     public void start() {
         for (int i = 0; i < N_CORES; i++) {
@@ -63,7 +71,11 @@ public class SimulatedCPU {
             }
         }
     }
-
+    
+    /**
+    * Metodo responsavel 
+    */
+    
     public synchronized void endOfJobSignal(int cIdx) {
         System.out.println("Core " + cIdx + " terminou sua tarefa.");
         exec[cIdx] = false;

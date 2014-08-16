@@ -2,13 +2,6 @@ package dvfssimulationtests;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -24,10 +17,23 @@ public class EnergyCalculator {
         freqs = new ArrayList<>();
     }
     
+    /**
+    * Metodo que adiciona o tipo Data para ultilizar a tempo de inicio e a 
+    * frequência de cada tarefa. 
+    */
+
     public void addPair(Date d, int freq){
         times.add(d);
         freqs.add(freq);
     }
+    
+    /**
+    * Metodo que calcula e retorna o somatorio de energia conforme os valores 
+    * que foram inseridos no metodo addPair. O somatório é feito da seguinte 
+    * forma, a cada interacao do laco ele vai somando a diferenca do tempo entre 
+    * o elemento atual e o proximo elemento guardado, em uma variavel (energy)
+    * que será retornada no final.
+    */
     
     public long getEnergy(){
         long energy = 0;

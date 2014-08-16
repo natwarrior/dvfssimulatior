@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dvfssimulationtests;
 
 /**
@@ -23,6 +17,10 @@ public class SimulatedCore extends Thread{
         this.parent = parent;
     }
     
+    /**
+    * exercutando as tarefas de formas que cada parte da mesma é exercutada em 
+    * uma CPU e com a frequencia adequada conforme a estrategia.
+    */
     @Override
     public void run(){
         System.out.println("Core " + cIdx + " iniciando tarefa de tamanho " + jobSize + "...");
