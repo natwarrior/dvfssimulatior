@@ -20,6 +20,8 @@ public class EnergyCalculator {
     /**
      * Metodo que adiciona o tipo Data para ultilizar a tempo de inicio e a
      * frequência de cada tarefa.
+     * @param d
+     * @param freq
      */
     public void addPair(Date d, int freq) {
         times.add(d);
@@ -32,6 +34,7 @@ public class EnergyCalculator {
      * forma, a cada interacao do laco ele vai somando a diferenca do tempo
      * entre o elemento atual e o proximo elemento guardado, em uma variavel
      * (energy) que será retornada no final.
+     * @return retorna o valor do somatorio das energias
      */
     public long getEnergy() {
         long energy = 0;

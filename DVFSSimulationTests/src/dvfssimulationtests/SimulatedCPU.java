@@ -24,6 +24,7 @@ public class SimulatedCPU {
     private int counter = N_THREADS;
     private int[] jobs = new int[N_THREADS];
     private int[] freqs = new int[N_THREADS];
+    private Date[][] data = new Date[N_THREADS][2];
     private boolean[] exec = new boolean[N_THREADS];
 
     //FINAL PRIVATE
@@ -34,8 +35,10 @@ public class SimulatedCPU {
     /**
      * Construtor que recebe as tarefas e uma flag para verificar se a simulacao
      * será com estrategia. Caso seja com estrategia, cada CPU comecará com a
-     * fre- quencia minima, senao iniciará com a frenquencia maxima multiplicado
+     * frequencia minima, senao iniciará com a frenquencia maxima multiplicado
      * pela porcentagem para a CPU sem estratégia.
+     * @param jobs
+     * @param strategy
      */
     public SimulatedCPU(int jobs[], boolean strategy) {
         this.jobs = jobs;
@@ -59,6 +62,7 @@ public class SimulatedCPU {
             exec[i] = true;
             cores[i] = new SimulatedThread(i, (int) (jobs[i] < MIN_JOB_SIZE ? MIN_JOB_SIZE : jobs[i]), this);
             energys[i].addPair(new Date(), freqs[i]);
+            data[i][0]=new Date();
             cores[i].start();
         }
         for (SimulatedThread s : cores) {
@@ -77,21 +81,25 @@ public class SimulatedCPU {
      * velocidade das threads restantes, caso o counter seja zero, ou seja não
      * tem thread em exercucao ele ira calcular o somatorio de todas as tarefas
      * feitas.
+     * @param cIdx
      */
     public synchronized void endOfJobSignal(int cIdx) {
         System.out.println("Core " + cIdx + " terminou sua tarefa.");
         exec[cIdx] = false;
+        data[cIdx][1]=new Date();
         counter--;      //retirando outra thread
         if (counter == 0) {
-            long totalEnergy = 0, thisEnergy;
+            long totalEnergy = 0, thisEnergy, totalTime=0;
             Date last = new Date();
             for (int i = 0; i < N_THREADS; i++) {
                 energys[i].addPair(last, freqs[i]);
                 thisEnergy = energys[i].getEnergy();
                 totalEnergy += thisEnergy;
+                totalTime+=gapTime(i);
                 System.out.println("Consumo do core " + i + " : " + thisEnergy);
             }
             System.err.println("Consumo total " + (strategy ? "com" : "sem") + " estratégia : " + totalEnergy);
+            System.err.println("O tempo total " + (strategy ? "com" : "sem") + " estratégia : " + totalTime);
         }
         if (strategy) {
             freqs[cIdx] = MIN_FREQ;
@@ -114,4 +122,14 @@ public class SimulatedCPU {
     int getFreq(int idx) {
         return freqs[idx];
     }
+    
+    /**
+     * Metodo que calcula a diferenca entre os tempo final o tempo inicial. 
+     * @param i
+     * @return o tempo relativo a diferenca entre os valores final e inicial 
+     */
+    
+    public long gapTime(int i){
+        return data[i][1].getTime()-data[i][0].getTime();
+    } 
 }
