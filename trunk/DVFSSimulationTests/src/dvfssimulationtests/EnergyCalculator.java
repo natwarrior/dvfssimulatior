@@ -36,8 +36,12 @@ public class EnergyCalculator {
     public long getEnergy() {
         long energy = 0;
         for (int i = 0; i < times.size() - 1; i++) {
-            energy += (times.get(i + 1).getTime() - times.get(i).getTime()) * freqs.get(i);
+            energy += (times.get(i + 1).getTime() - times.get(i).getTime())* freqs.get(i);
         }
         return energy;
+    }
+    
+    public long getLastTime(){
+        return (long)times.get(times.size()-1).getTime();
     }
 }

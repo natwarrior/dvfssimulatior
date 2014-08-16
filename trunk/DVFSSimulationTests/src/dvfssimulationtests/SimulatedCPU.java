@@ -13,11 +13,11 @@ public class SimulatedCPU {
     public static final int N_THREADS = 4;
     public final static int MIN_JOB_SIZE = 1;
     public final static int MAX_JOB_SIZE = 15;
-    public final static int MAX_FREQ = 5000;
+    public final static int MAX_FREQ = 2400;
+    public final static int MIN_FREQ = 1200;
 
     // PRIVATE & STATIC
-    private static final double INCREASE_FREQ_PERCENT = 0.75;
-    private static final double NON_STRATEGY_FREQ_PERCENT = 0.8;
+    private static final int INCREASE_FREQ_GAP_PART = 3;
 
     // PRIVATE
     private boolean strategy;
@@ -29,7 +29,7 @@ public class SimulatedCPU {
     //FINAL PRIVATE
     private final SimulatedThread[] cores = new SimulatedThread[N_THREADS];
     private final EnergyCalculator[] energys = new EnergyCalculator[N_THREADS];
-    private final static int MIN_FREQ = 1000;
+    
 
     /**
      * Construtor que recebe as tarefas e uma flag para verificar se a simulacao
@@ -41,7 +41,7 @@ public class SimulatedCPU {
         this.jobs = jobs;
         this.strategy = strategy;
         for (int i = 0; i < N_THREADS; i++) {
-            freqs[i] = strategy ? MIN_FREQ : (int) (MAX_FREQ * NON_STRATEGY_FREQ_PERCENT);
+            freqs[i] = strategy ? MIN_FREQ : MAX_FREQ;
             energys[i] = new EnergyCalculator();
         }
     }
@@ -84,8 +84,9 @@ public class SimulatedCPU {
         counter--;      //retirando outra thread
         if (counter == 0) {
             long totalEnergy = 0, thisEnergy;
+            Date last = new Date();
             for (int i = 0; i < N_THREADS; i++) {
-                energys[i].addPair(new Date(), freqs[i]);
+                energys[i].addPair(last, freqs[i]);
                 thisEnergy = energys[i].getEnergy();
                 totalEnergy += thisEnergy;
                 System.out.println("Consumo do core " + i + " : " + thisEnergy);
@@ -97,13 +98,13 @@ public class SimulatedCPU {
             energys[cIdx].addPair(new Date(), MIN_FREQ);
             for (int i = 0; i < N_THREADS; i++) {
                 if (exec[i]) {
-                    freqs[i] *= 1 + INCREASE_FREQ_PERCENT;
+                    freqs[i] += (MAX_FREQ - MIN_FREQ) / INCREASE_FREQ_GAP_PART;
                     if (freqs[i] > MAX_FREQ) {
                         freqs[i] = MAX_FREQ;
                     }
                     energys[i].addPair(new Date(), freqs[i]);
                     System.out.println("Core " + i + " teve a frequência "
-                            + "aumentada em " + INCREASE_FREQ_PERCENT * 100 + "%.");
+                            + "aumentada para " + freqs[i] + ".");
                 }
             }
         }
