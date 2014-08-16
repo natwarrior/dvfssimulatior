@@ -26,8 +26,10 @@ public class SimulatedThread extends Thread {
         System.out.println("Core " + cIdx + " iniciando tarefa de tamanho " + jobSize + "...");
         for (int doneJob = 0; doneJob <= jobSize; doneJob++) {
             int freq = parent.getFreq(cIdx);
+            //Ajustando a frequência
+            freq = freq > SimulatedCPU.MAX_FREQ ? SimulatedCPU.MAX_FREQ : freq;
             try {
-                Thread.sleep(SimulatedCPU.MAX_FREQ - freq);
+                Thread.sleep(SimulatedCPU.MAX_FREQ - (freq - SimulatedCPU.MIN_FREQ));
             } catch (InterruptedException ex) {
                 System.exit(1);
             }
