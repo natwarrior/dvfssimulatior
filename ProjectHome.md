@@ -1,0 +1,1 @@
+O programa testa situações em de sincronização comuns em programas normais usando a técnica de DVFS com o intuito de minimizar o custo energético para execução das tarefas.
